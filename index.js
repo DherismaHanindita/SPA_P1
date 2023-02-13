@@ -13,3 +13,9 @@ linkAbout.onclick = function (event){
     root.textContent = "Welcome To About";
     history.pushState(null, "", event.target.href)
 };
+
+if (location.hash === "#about"){
+    root.textContent = "Welcome To About";
+} else if (location.hash === "#home"){
+    root.textContent = "Welcome To Home";
+}
