@@ -1,12 +1,24 @@
 let state = {
     counter: 0,
-    inputValue: "",
+    inputValue: localStorage.getItem("inputValue") ?? "",
     hash: location.hash,
 }
 
 function setState(newState){
-    state = { ...state, ...newState };
+    const prevState = {...state};
+    const nextState = { ...state, ...newState};
+    state = nextState;
     render();
+    onStateChange(prevState, nextState);
+}
+
+function onStateChange(prevState, nextState){
+    if (prevState.inputValue != nextState.inputValue){
+        localStorage.setItem("inputValue", nextState.inputValue);
+    }
+    if (prevState.hash != nextState.hash){;
+        history.pushState(null, "",nextState.hash);
+    }
 }
 
 function Link(props){
@@ -17,7 +29,6 @@ function Link(props){
         event.preventDefault();
         const url = new URL(event.target.href);
         setState({ hash: url.hash});
-        history.pushState(null, "", event.target.href);
         render();
     };
 
@@ -75,8 +86,8 @@ function HomeScreen() {
     const buttonClear = document.createElement("button")
     buttonClear.textContent = "Clear";
     buttonClear.onclick = function (){
-        setState({ inputValue: ""})
-    }
+        setState({ inputValue: ""});
+    };
 
     const div = document.createElement("div");
     div.append(navbar);
